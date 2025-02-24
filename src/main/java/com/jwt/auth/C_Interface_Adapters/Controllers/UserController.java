@@ -2,6 +2,7 @@ package com.jwt.auth.C_Interface_Adapters.Controllers;
 
 import com.jwt.auth.A_Domain.Users;
 import com.jwt.auth.B_Use_Cases.Interfaces.UserService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createUser(@RequestBody Users users){
+    public ResponseEntity<String> createUser(@RequestBody @Valid Users users){
         userService.createUser(users);
         return ResponseEntity.status(HttpStatus.CREATED).body("User was created");
     }

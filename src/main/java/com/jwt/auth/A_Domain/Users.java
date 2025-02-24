@@ -22,18 +22,22 @@ public class Users implements UserDetails {
     private Long id;
     @Column(name = "name", length = 150, nullable = false)
     private String name;
-    @Column(name = "nickname", length = 200, nullable = false, unique = true)
-    private String nickname;
+    @Column(name = "username", length = 200, nullable = false, unique = true)
+    private String username;
     @Column(name = "password", length = 200, nullable = false)
     private String password;
-    @Column(name = "email", length = 300, nullable = false, unique = true)
+    @Column(name = "email", length = 300, nullable = true, unique = true)
     private String email;
-    @Column(name = "enabled", nullable = false)
+    @Column(name = "enabled", nullable = true)
     private Boolean enabled;
     @Enumerated(EnumType.STRING)
     private Role role;
 
 
+    /**
+     * Goes through the list of authorities
+     * @return Collection<? extends GrantedAuthority>
+     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if(Objects.isNull(role)) return null;
@@ -53,7 +57,7 @@ public class Users implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.getUsername();
+        return this.username;
     }
 
     @Override
@@ -92,12 +96,8 @@ public class Users implements UserDetails {
         this.name = name;
     }
 
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public void setPassword(String password) {
