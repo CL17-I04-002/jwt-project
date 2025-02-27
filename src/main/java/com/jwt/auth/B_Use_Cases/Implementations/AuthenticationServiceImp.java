@@ -6,7 +6,14 @@ import com.jwt.auth.B_Use_Cases.Interfaces.JwtService;
 import com.jwt.auth.B_Use_Cases.Interfaces.UserService;
 import com.jwt.auth.C_Interface_Adapters.Controllers.dto.RegisterdUser;
 import com.jwt.auth.C_Interface_Adapters.Controllers.dto.SaveUser;
+import com.jwt.auth.C_Interface_Adapters.Controllers.dto.auth.AuthenticationRequest;
+import com.jwt.auth.C_Interface_Adapters.Controllers.dto.auth.AuthenticationResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -18,6 +25,7 @@ public class AuthenticationServiceImp implements AuthenticationService {
 
     private final UserService userService;
     private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
 
     /**
      * Stores a user in db, then it creates a JWT
@@ -36,6 +44,28 @@ public class AuthenticationServiceImp implements AuthenticationService {
         String jwt = jwtService.generateToken(users, generateExtraClaims(users));
         userDto.setJwt(jwt);
         return userDto;
+    }
+
+    /**
+     * It uses most common implementation which is UsernamePasswordAuthenticationToken, authenticates current user
+     * after that it retrieves current user to generate JWT
+     * @param authRequest
+     * @return AuthenticationResponse
+     */
+    @Override
+    public AuthenticationResponse login(AuthenticationRequest authRequest) {
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                authRequest.getUsername(),
+                authRequest.getPassword()
+        );
+        authenticationManager.authenticate(authentication);
+        UserDetails users = userService.findOneByUsername(authRequest.getUsername()).get();
+        String jwt = jwtService.generateToken(users, generateExtraClaims((Users) users));
+        AuthenticationResponse authRsp = new AuthenticationResponse();
+        authRsp.setJwt(jwt);
+
+        return authRsp;
+
     }
 
     /**
