@@ -10,4 +10,6 @@ public interface AuthenticationService {
     RegisterdUser registerOneCustomer(SaveUser newUser);
 
     AuthenticationResponse login(@Valid AuthenticationRequest authenticationRequest);
+
+    boolean validateToken(String jwt);
 }

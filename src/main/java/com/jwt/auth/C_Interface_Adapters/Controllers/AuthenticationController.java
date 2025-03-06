@@ -6,10 +6,7 @@ import com.jwt.auth.C_Interface_Adapters.Controllers.dto.auth.AuthenticationResp
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -28,6 +25,10 @@ public class AuthenticationController {
             @RequestBody @Valid AuthenticationRequest authenticationRequest){
         AuthenticationResponse rsp = authenticationService.login(authenticationRequest);
         return ResponseEntity.ok(rsp);
-
+    }
+    @GetMapping("/validate")
+    public ResponseEntity<Boolean> validate(@RequestParam String jwt){
+        boolean isTokenValid = authenticationService.validateToken(jwt);
+        return ResponseEntity.ok(isTokenValid);
     }
 }
