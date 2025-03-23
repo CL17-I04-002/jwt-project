@@ -1,5 +1,6 @@
 package com.jwt.auth.C_Interface_Adapters.Controllers;
 
+import com.jwt.auth.A_Domain.security.Users;
 import com.jwt.auth.B_Use_Cases.Interfaces.AuthenticationService;
 import com.jwt.auth.C_Interface_Adapters.Controllers.dto.auth.AuthenticationRequest;
 import com.jwt.auth.C_Interface_Adapters.Controllers.dto.auth.AuthenticationResponse;
@@ -30,5 +31,10 @@ public class AuthenticationController {
     public ResponseEntity<Boolean> validate(@RequestParam String jwt){
         boolean isTokenValid = authenticationService.validateToken(jwt);
         return ResponseEntity.ok(isTokenValid);
+    }
+    @GetMapping("/profile")
+    public ResponseEntity<Users> findMyProfile(){
+        Users user = authenticationService.findLoggedInUser();
+        return ResponseEntity.ok(user);
     }
 }

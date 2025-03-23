@@ -1,6 +1,6 @@
 package com.jwt.auth.A_Domain.util;
 
-public enum RolePermission {
+public enum RolePermissionEnum {
     READ_ALL_PRODUCTS,
     READ_ONE_PRODUCTS,
     CREATE_ONE_PRODUCTS,

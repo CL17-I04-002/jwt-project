@@ -1,6 +1,6 @@
 package com.jwt.auth.D_Infraestructure.security.filter;
 
-import com.jwt.auth.A_Domain.Users;
+import com.jwt.auth.A_Domain.security.Users;
 import com.jwt.auth.B_Use_Cases.Exception.ObjectNotFoundException;
 import com.jwt.auth.B_Use_Cases.Interfaces.JwtService;
 import com.jwt.auth.B_Use_Cases.Interfaces.UserService;

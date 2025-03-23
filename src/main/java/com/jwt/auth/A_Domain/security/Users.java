@@ -1,6 +1,6 @@
-package com.jwt.auth.A_Domain;
+package com.jwt.auth.A_Domain.security;
 
-import com.jwt.auth.A_Domain.util.Role;
+import com.jwt.auth.A_Domain.util.RoleEnum;
 import jakarta.persistence.*;
 import lombok.Builder;
 
@@ -9,6 +9,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -30,7 +31,8 @@ public class Users implements UserDetails {
     private String email;
     @Column(name = "enabled", nullable = true)
     private Boolean enabled;
-    @Enumerated(EnumType.STRING)
+    @ManyToOne
+    @JoinColumn(name = "role_id")
     private Role role;
 
     public Users() {
@@ -56,10 +58,12 @@ public class Users implements UserDetails {
 
         if(Objects.isNull(role.getPermissions())) return null;
 
-        return role.getPermissions().stream()
-                .map(each -> each.name())
+        List<SimpleGrantedAuthority> authorities = role.getPermissions().stream()
+                .map(each -> each.getOperation().getName())
                 .map(each -> new SimpleGrantedAuthority(each))
                 .collect(Collectors.toList());
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + this.role.getName()));
+        return authorities;
     }
 
     @Override

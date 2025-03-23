@@ -1,8 +1,7 @@
 package com.jwt.auth.D_Infraestructure.security;
 
 import com.jwt.auth.B_Use_Cases.Exception.ObjectNotFoundException;
-import com.jwt.auth.D_Infraestructure.UserRepository;
-import lombok.AllArgsConstructor;
+import com.jwt.auth.D_Infraestructure.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

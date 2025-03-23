@@ -1,10 +1,9 @@
 package com.jwt.auth.C_Interface_Adapters.Controllers;
 
-import com.jwt.auth.A_Domain.Users;
+import com.jwt.auth.A_Domain.security.Users;
 import com.jwt.auth.B_Use_Cases.Interfaces.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,13 +1,16 @@
 package com.jwt.auth.B_Use_Cases.Implementations;
 
-import com.jwt.auth.A_Domain.Users;
-import com.jwt.auth.A_Domain.util.Role;
+import com.jwt.auth.A_Domain.security.Role;
+import com.jwt.auth.A_Domain.security.Users;
+import com.jwt.auth.A_Domain.util.RoleEnum;
 import com.jwt.auth.B_Use_Cases.Exception.InvalidPasswordException;
 import com.jwt.auth.B_Use_Cases.Exception.ObjectNotFoundException;
+import com.jwt.auth.B_Use_Cases.Interfaces.RoleService;
 import com.jwt.auth.B_Use_Cases.Interfaces.UserService;
 import com.jwt.auth.C_Interface_Adapters.Controllers.dto.SaveUser;
-import com.jwt.auth.D_Infraestructure.UserRepository;
+import com.jwt.auth.D_Infraestructure.repository.UserRepository;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,14 +24,20 @@ public class UserServiceImp implements UserService {
 
     private final UserRepository userRepository;
     private final String userNotFound;
+    private final String roleNotFound;
     private final PasswordEncoder passwordEncoder;
+    private final RoleService roleService;
 
+    @Autowired
     public UserServiceImp(UserRepository userRepository,
                           @Value("${user.not.found}") String userNotFound,
-                          PasswordEncoder passwordEncoder) {
+                          PasswordEncoder passwordEncoder, @Value("${role.not.found}") String roleNotFound,
+                          RoleService roleService) {
         this.userRepository = userRepository;
         this.userNotFound = userNotFound;
         this.passwordEncoder = passwordEncoder;
+        this.roleNotFound = roleNotFound;
+        this.roleService = roleService;
     }
 
     @Override
@@ -74,12 +83,14 @@ public class UserServiceImp implements UserService {
         
         validatePassword(newUser);
         
-        Users users = Users.builder()
-                .password(passwordEncoder.encode(newUser.getPassword()))
-                .username(newUser.getUsername())
-                .name(newUser.getName())
-                .role(Role.ROLE_CUSTOMER)
-                .build();
+        Users users = new Users();
+                users.setPassword(passwordEncoder.encode(newUser.getPassword()));
+                users.setUsername(newUser.getUsername());
+                users.setName(newUser.getName());
+                Role defaultRole = roleService.findDefaultRole()
+                        .orElseThrow(() -> new ObjectNotFoundException(roleNotFound));
+                users.setRole(defaultRole);
+
         return userRepository.save(users);
     }
 

@@ -3,7 +3,7 @@ package com.jwt.auth.B_Use_Cases.Implementations;
 import com.jwt.auth.A_Domain.Product;
 import com.jwt.auth.B_Use_Cases.Exception.ObjectNotFoundException;
 import com.jwt.auth.B_Use_Cases.Interfaces.ProductService;
-import com.jwt.auth.D_Infraestructure.ProductRepository;
+import com.jwt.auth.D_Infraestructure.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
